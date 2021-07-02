@@ -10,13 +10,11 @@ function poule_install(){
     $poule_table_name = $wpdb->prefix . 'poule';
 
 
-    $sql ="CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+    $sql ="CREATE SCHEMA IF NOT EXISTS `.$poule_table_name.` DEFAULT CHARACTER SET utf8 ;
 USE `mydb` ;
 
--- -----------------------------------------------------
--- Table `mydb`.`Sondage_question`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Sondage_question` (
+
+CREATE TABLE IF NOT EXISTS `.$poule_table_name.`.`Sondage_question` (
   `id` INT(10) NOT NULL AUTO_INCREMENT,
   `titre` VARCHAR(255) NOT NULL,
   `question` VARCHAR(255) NOT NULL,
@@ -26,9 +24,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Sondage_question` (
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `mydb`.`reponse`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`reponse` (
   `id` INT(10) NOT NULL AUTO_INCREMENT,
   `Sondage_question_id` INT(10) NOT NULL,
