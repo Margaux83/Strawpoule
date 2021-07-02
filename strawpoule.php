@@ -9,7 +9,7 @@
 
 define ("POULE_MIAN_FILE",__FILE__);
 
-define('PLUGIN_DIR', dirnam(__FILE__).'/');
+define('PLUGIN_DIR', dirname(__FILE__).'/');
 
 require_once ('poule_init.php');
 
