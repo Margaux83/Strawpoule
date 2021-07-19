@@ -1,17 +1,30 @@
-<?php
-
-echo 'hello';
-?>
-<!DOCTYPE>
+<!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
-	<meta charset="utf-8">
-	<title></title>
-	<?php wp_head(); ?>
+    <meta charset="<?php bloginfo('charset'); ?>">
+    <?php wp_head(); ?>
 </head>
-<body>
-<h1> Sondage</h1>
 
-
-</body>
-</html>
+<div class="wrap">
+    <div><br/></div>
+    <br>
+    <table>
+        <tr>
+            <th><label>Shortcode</label></th>
+            <th><label>Expiration</label></th>
+            <th><label>Action</label></th>
+        </tr>
+        <tbody>
+            <tr>
+                <td><code></code></td>
+                <td></td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+</div>

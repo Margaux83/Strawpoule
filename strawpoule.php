@@ -87,3 +87,5 @@ class Strawpoule
 define ("POULE_MAIN_FILE",__FILE__);
 
 define('PLUGIN_DIR', dirname(__FILE__).'/');
+
+include 'views/admin_poll.php';
