@@ -78,8 +78,9 @@ class Strawpoule
         $question = $prefix . self::QUESTION;
         $answer = $prefix . self::ANSWER;
         $result = $prefix . self::RESULT;
-         $query = "DROP TABLE ".$question.",".$answer.",".$result;
-         $wpdb->query($query);
+        $query = "DROP TABLE $result,$answer,$question;";
+		$wpdb->query($query);
+		delete_option("uninstall_db");
     }
 }
 
