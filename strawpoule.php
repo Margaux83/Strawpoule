@@ -71,6 +71,8 @@ class Strawpoule
         dbDelta($sql, true);
     }
     static function uninstall(){
+	global $wpdb;
+        $prefix = $wpdb->prefix;
         $question = $prefix . self::QUESTION;
         $answer = $prefix . self::ANSWER;
         $result = $prefix . self::RESULT;
