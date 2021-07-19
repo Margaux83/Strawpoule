@@ -12,7 +12,7 @@ if(__FILE__ == $_SERVER['SCRIPT_FILENAME']) die();
 
 register_activation_hook(__FILE__, 	array('Strawpoule','register'));
 add_action('admin_menu', 			array('Strawpoule','init'));
-
+register_deactivation_hook( __FILE__, array('Strawpoule','uninstall'));
 class Strawpoule
 {
     const QUESTION = 'strawpoule_question';
@@ -69,6 +69,13 @@ class Strawpoule
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         $wpdb->show_errors(true);
         dbDelta($sql, true);
+    }
+    static function uninstall(){
+        $question = $prefix . self::QUESTION;
+        $answer = $prefix . self::ANSWER;
+        $result = $prefix . self::RESULT;
+         $query = "DROP TABLE ".$question.",".answer.",".result;
+         $wpdb->query($query);
     }
 }
 
