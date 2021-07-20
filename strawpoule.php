@@ -11,24 +11,18 @@
 if(__FILE__ == $_SERVER['SCRIPT_FILENAME']) die();
 
 register_activation_hook(__FILE__, 	array('Strawpoule','register'));
-add_action('admin_menu', 			array('Strawpoule','init'));
 register_deactivation_hook( __FILE__, array('Strawpoule','uninstall'));
+
+require_once 'includes/strawpoule_functions.php';
+require_once 'includes/class-wpcpolls-cpt.php';
+require_once 'includes/class-wpcpolls-shortcode.php';
+
 class Strawpoule
 {
     const QUESTION = 'strawpoule_question';
     const ANSWER = 'strawpoule_answer';
     const RESULT = 'strawpoule_result';
 
-
-    static function init()
-    {
-        add_menu_page('Strawpoule', 'Strawpoule', 'manage_options', 'strawpoule_menu', array(__CLASS__, 'backend'));
-        add_submenu_page('strawpoule_menu', "Strawpoule Sondages", "Sondages", 'manage_options', "strawpoule_polls", array(__CLASS__, 'backend'));
-        add_submenu_page('strawpoule_menu', "Nouveau Sondage", "Nouveau Sondage", 'manage_options', "strawpoule_new_poll", array(__CLASS__, 'backendOptions'));
-        add_submenu_page('strawpoule_menu', "Editer Sondage", "Editer Sondage", 'manage_options', "strawpoule_edit_poll", array(__CLASS__, 'backendOptions'));
-        add_submenu_page('strawpoule_menu', "Statistique", "Statistique", 'manage_options', "strawpoule_statistic", array(__CLASS__, 'backendOptions'));
-        remove_submenu_page('strawpoule_menu', 'strawpoule_menu');
-    }
 
     static function register()
     {
@@ -88,4 +82,4 @@ define ("POULE_MAIN_FILE",__FILE__);
 
 define('PLUGIN_DIR', dirname(__FILE__).'/');
 
-include 'views/admin_poll.php';
+
