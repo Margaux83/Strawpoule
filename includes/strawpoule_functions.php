@@ -1,30 +1,6 @@
 <?php
 
-function wpcpolls_admin_secion_handler () {
-    add_menu_page( __('Strawpoule', 'wordpress-custom-polls'), __('Strawpoule', 'wordpress-custom-polls'), 'edit_posts', 'strawpoule', 'admin_poll_function', 'dashicons-list-view' , 120 );
-    add_submenu_page( 'strawpoule', __( 'Nouveau sondage', 'wordpress-custom-polls' ), __( 'Nouveau sondage', 'wordpress-custom-polls' ), 'manage_options', 'new-poll', 'admin_new_poll_function');
-    add_submenu_page( 'strawpoule', __( 'Editer sondage', 'wordpress-custom-polls' ), __( 'Editer sondage', 'wordpress-custom-polls' ), 'manage_options', 'edit-poll', 'admin_edit_poll_function');
-    add_submenu_page( 'strawpoule', __( 'Statisique sondage', 'wordpress-custom-polls' ), __( 'Statisique sondage', 'wordpress-custom-polls' ), 'manage_options', 'stat-poll', 'admin_stat_poll_function');
-}
 
-add_action('admin_menu', 'wpcpolls_admin_secion_handler');
-
-function admin_poll_function () {
-    require_once plugin_dir_path(__FILE__) . 'views/admin_poll.php';
-}
-
-function admin_new_poll_function () {
-    require_once plugin_dir_path(__FILE__) . 'views/admin_poll_add.php';
-}
-
-function admin_edit_poll_function () {
-    require_once plugin_dir_path(__FILE__) . 'views/admin_poll_edit.php';
-}
-
-function admin_stat_poll_function () {
-    require_once plugin_dir_path(__FILE__) . 'views/admin_poll_statistic.php';
-
-}
 
 
 /* --------------------------------------------------------------

@@ -11,6 +11,7 @@
 if(__FILE__ == $_SERVER['SCRIPT_FILENAME']) die();
 
 register_activation_hook(__FILE__, 	array('Strawpoule','register'));
+add_action('admin_menu', 			array('Strawpoule','init'));
 register_deactivation_hook( __FILE__, array('Strawpoule','uninstall'));
 
 require_once 'includes/strawpoule_functions.php';
@@ -23,7 +24,75 @@ class Strawpoule
     const ANSWER = 'strawpoule_answer';
     const RESULT = 'strawpoule_result';
 
+    static function init() {
+        add_menu_page( __('Strawpoule', 'wordpress-custom-polls'), __('Strawpoule', 'wordpress-custom-polls'), 'edit_posts', 'strawpoule', array(__CLASS__,'admin_poll_function'), 'dashicons-list-view' , 120 );
+        add_submenu_page( 'strawpoule', __( 'Nouveau sondage', 'wordpress-custom-polls' ), __( 'Nouveau sondage', 'wordpress-custom-polls' ), 'manage_options', 'new-poll', array(__CLASS__,'admin_new_poll_function'));
+        add_submenu_page( 'strawpoule', __( 'Editer sondage', 'wordpress-custom-polls' ), __( 'Editer sondage', 'wordpress-custom-polls' ), 'manage_options', 'edit-poll', array(__CLASS__,'admin_edit_poll_function'));
+        add_submenu_page( 'strawpoule', __( 'Statisique sondage', 'wordpress-custom-polls' ), __( 'Statisique sondage', 'wordpress-custom-polls' ), 'manage_options', 'stat-poll', array(__CLASS__,'admin_stat_poll_function'));
+    }
 
+
+    function admin_poll_function () {
+        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll.php';
+
+    }
+
+    function admin_new_poll_function () {
+        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_add.php';
+        global $wpdb;
+
+        $polls = $wpdb->prefix.self::POLLS;
+        $tableRates = $wpdb->prefix.self::RATES;
+        if(isset($_POST) && count($_POST)>0){
+            $_POST = stripslashes_deep($_POST);
+            $wpdb->show_errors(true);
+            if($_GET['id']=='0'){
+
+                $wpdb->insert($polls, $_POST);
+            }else{
+                $wpdb->update($polls, $_POST, array('id'=> $_GET['id']));
+            }
+
+            unset($_GET['id']);
+        }
+
+        /* if(isset($_GET['id']) && is_numeric($_GET['id'])){
+             $id = $_GET['id'];
+             $sql = "select * from $polls where id=$id";
+
+             $row = $wpdb->get_row($sql);
+             $sql ="select count(id) voti from $tableRates where poll_id=$id";
+             $rates = $wpdb->get_var($sql, 0,0);
+
+             include 'views/admin_poll_edit.php';
+         }elseif (isset($_GET['delid']) && is_numeric($_GET['delid'])) {
+             $id = $_GET['delid'];
+             $sql = "delete from $polls where id=$id";
+             $wpdb->query($sql);
+             $sql = "delete from $tableRates where poll_id=$id";
+             $wpdb->query($sql);
+             include 'views/admin_polls.php';
+
+
+
+
+         }else{
+             # $sql ="select p.id, p.question, count(r.id) voti from $polls p left join $rates r on p.id = r.poll_id order by expiration_date desc";
+             $sql ="select * from $polls p order by since desc";
+             $results = $wpdb->get_results($sql);
+             include 'views/admin_polls.php';
+         }*/
+
+    }
+
+    function admin_edit_poll_function () {
+        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_edit.php';
+    }
+
+    function admin_stat_poll_function () {
+        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_statistic.php';
+
+    }
     static function register()
     {
         global $wpdb;
