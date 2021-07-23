@@ -27,8 +27,6 @@ class Strawpoule
     static function init() {
         add_menu_page( __('Strawpoule', 'wordpress-custom-polls'), __('Strawpoule', 'wordpress-custom-polls'), 'edit_posts', 'strawpoule', array(__CLASS__,'admin_poll_function'), 'dashicons-list-view' , 120 );
         add_submenu_page( 'strawpoule', __( 'Nouveau sondage', 'wordpress-custom-polls' ), __( 'Nouveau sondage', 'wordpress-custom-polls' ), 'manage_options', 'new-poll', array(__CLASS__,'admin_new_poll_function'));
-        add_submenu_page( 'strawpoule', __( 'Editer sondage', 'wordpress-custom-polls' ), __( 'Editer sondage', 'wordpress-custom-polls' ), 'manage_options', 'edit-poll', array(__CLASS__,'admin_edit_poll_function'));
-        add_submenu_page( 'strawpoule', __( 'Statisique sondage', 'wordpress-custom-polls' ), __( 'Statisique sondage', 'wordpress-custom-polls' ), 'manage_options', 'stat-poll', array(__CLASS__,'admin_stat_poll_function'));
     }
 
 
