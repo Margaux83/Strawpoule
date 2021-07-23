@@ -19,17 +19,29 @@
             </th>
             <th scope="col">
                 <a href="">
-                    <span>Résultats</span><span class="sorting-indicator"></span>
+                    <span>Question</span><span class="sorting-indicator"></span>
                 </a>
             </th>
+            <th scope="col">
+                <a href="">
+                    <span>Résultats</span><span class="sorting-indicator"></span>
+                </a>
+            </th>  <th scope="col">
+            </th>
+
         </tr>
         </thead>
         <tbody id="the-list">
+        <?php
+        foreach ( $polls as $poll ){
+        ?>
             <tr id="poll-">
                 <td class="has-row-actions">
                     <strong>
                         <a href="" class="edit">
-                            <span></span>
+                            <span><?php
+                                echo date('d/m/Y H:i:s', strtotime($poll['createDate']));
+                            ?></span>
                         </a>
                     </strong>
                     <div class="row-actions">
@@ -41,18 +53,47 @@
             </span>
                     </div>
                 </td>
+                    <td class="has-row-actions column-primary">
+                        <strong>
+                            <a href="" class="edit">
+                                <span><?= $poll['titre']; ?></span>
+                            </a>
+                        </strong>
+                        <div class="row-actions">
+                            <span class="edit"><a href=""></a></span> |
+                            <span class="delete"><a class="submitdelete" href=""></a>
+                        </div>
+                    </td>
+                    <td class="has-row-actions column-primary">
+                        <strong>
+                            <a href="" class="edit">
+                                <span><?= $poll['question']; ?></span>
+                            </a>
+                        </strong>
+                        <div class="row-actions">
+                            <span class="edit"><a href=""></a></span> |
+                            <span class="delete"><a class="submitdelete" href=""></a>
+                        </div>
+                    </td>
+                    <td class="has-row-actions column-primary">
+                        <strong>
+                            <a href="" class="edit">
+                                <span><?= "Réponses : ". $poll['countReponse']; ?></span>
+                            </a>
+                            <?php
+                            foreach ( $answers as $answer ){
+                                echo "</br>".$answer['reponse'] ." : ". $answer['countReponse'];
+                             } ?>
+                        </strong>
+                    </td>
                 <td class="has-row-actions column-primary">
                     <strong>
-                        <a href="" class="edit">
-                            <span></span>
-                        </a>
+                        <span class="edit"><a href="">Editer</a></span> |
+                        <span class="delete"><a class="submitdelete" href="">Supprimer</a></span>
                     </strong>
-                    <div class="row-actions">
-                        <span class="edit"><a href=""></a></span> |
-                        <span class="delete"><a class="submitdelete" href=""></a>
-                    </div>
                 </td>
             </tr>
+        <?php } ?>
         </tbody>
         <tfoot>
         </tfoot>

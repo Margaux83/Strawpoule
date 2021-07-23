@@ -30,17 +30,31 @@ class Strawpoule
     }
 
 
-    function admin_poll_function () {
-        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll.php';
+    static function admin_poll_function () {
 
+        global $wpdb;
+        $prefix = $wpdb->prefix;
+        $question = $prefix . self::QUESTION;
+        $answer = $prefix . self::ANSWER;
+        $result = $prefix . self::RESULT;
+
+        $result = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id");
+
+        $polls = json_decode(json_encode($result), true);
+        $answer_poll = $wpdb->get_results("SELECT reponse, count(reponse) as countReponse FROM $answer WHERE Sondage_question_id =".$polls[0]['question_id']. " GROUP BY reponse");
+        $answers = json_decode(json_encode($answer_poll), true);
+
+        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll.php';
     }
 
-    function admin_new_poll_function () {
+   static function admin_new_poll_function () {
         require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_add.php';
         global $wpdb;
+       $prefix = $wpdb->prefix;
 
-        $polls = $wpdb->prefix.self::POLLS;
-        $tableRates = $wpdb->prefix.self::RATES;
+        $question = $prefix . self::QUESTION;
+        $answer = $prefix . self::ANSWER;
+        $result = $prefix . self::RESULT;
         if(isset($_POST) && count($_POST)>0){
             $_POST = stripslashes_deep($_POST);
             $wpdb->show_errors(true);
@@ -53,34 +67,6 @@ class Strawpoule
 
             unset($_GET['id']);
         }
-
-        /* if(isset($_GET['id']) && is_numeric($_GET['id'])){
-             $id = $_GET['id'];
-             $sql = "select * from $polls where id=$id";
-
-             $row = $wpdb->get_row($sql);
-             $sql ="select count(id) voti from $tableRates where poll_id=$id";
-             $rates = $wpdb->get_var($sql, 0,0);
-
-             include 'views/admin_poll_edit.php';
-         }elseif (isset($_GET['delid']) && is_numeric($_GET['delid'])) {
-             $id = $_GET['delid'];
-             $sql = "delete from $polls where id=$id";
-             $wpdb->query($sql);
-             $sql = "delete from $tableRates where poll_id=$id";
-             $wpdb->query($sql);
-             include 'views/admin_polls.php';
-
-
-
-
-         }else{
-             # $sql ="select p.id, p.question, count(r.id) voti from $polls p left join $rates r on p.id = r.poll_id order by expiration_date desc";
-             $sql ="select * from $polls p order by since desc";
-             $results = $wpdb->get_results($sql);
-             include 'views/admin_polls.php';
-         }*/
-
     }
 
     function admin_edit_poll_function () {
@@ -110,7 +96,7 @@ class Strawpoule
 		);
 		
 		CREATE TABLE $answer(
-          id int(10) NOT NULL,
+          id int(10) NOT NULL AUTO_INCREMENT,
           Sondage_question_id int(10) NOT NULL,
           reponse varchar(255) NOT NULL,
           PRIMARY KEY (id),
@@ -118,7 +104,7 @@ class Strawpoule
 		);
 
 		CREATE TABLE $result(
-          id int(10) NOT NULL,
+          id int(10) NOT NULL AUTO_INCREMENT,
           ip varchar(255) DEFAULT NULL,
           reponse_id int(10) NOT NULL,
           PRIMARY KEY (id),
@@ -143,6 +129,7 @@ class Strawpoule
 		$wpdb->query($query);
 		delete_option("uninstall_db");
     }
+
 }
 
 define ("POULE_MAIN_FILE",__FILE__);
