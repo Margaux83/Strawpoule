@@ -12,17 +12,6 @@
                 <th><label>Question</label></th>
                 <td><textarea name="question-poll" style="width: auto" rows="5" cols="40" required /></textarea></td>
                 </tr>
-
-            </table>
-        </div>
-        <?php
-        wp_nonce_field();
-        submit_button(); ?>
-    </form>
-    <form method="post">
-        <div>
-            <table class="form-table" role="presentation" id="createuser">
-                <h1>Réponses du sondage</h1>
                 <tr class="form-field form-required">
                     <th><label>#1</label></th>
                     <td><input type="text" name="name-choice1" value="" required /></td>
