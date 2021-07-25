@@ -34,6 +34,8 @@
         <tbody id="the-list">
         <?php
         foreach ( $polls as $poll ){
+
+            $shortcode = "[strawpoule id=".$poll["question_id"]."]";
         ?>
             <tr id="poll-">
                 <td class="has-row-actions">
@@ -46,8 +48,10 @@
                     </strong>
                     <div class="row-actions">
             <span>
-              <a href="">
-                <strong style="color: #555"></strong>
+              <a href="javascript: navigator.clipboard.writeText('<?= $shortcode; ?>').then(function() { }, function() { alert('Failed'); });">
+                <strong style="color: #555"><?php
+                    echo $shortcode;
+                    ?> </strong>
                 <span alt="f105" class="dashicons dashicons-admin-page"></span>
               </a>
             </span>
@@ -81,9 +85,8 @@
                                 <span><?= "Réponses : ". $poll['countReponse']; ?></span>
                             </a>
                             <?php
-                            foreach ( $answers as $answer ){
-                                echo "</br>".$answer['reponse'] ." : ". $answer['countReponse'];
-                             } ?>
+                                echo "</br>".$answers[0]['reponse'] ." : ". $answers[0]['countReponse'];
+                              ?>
                         </strong>
                     </td>
                 <td class="has-row-actions column-primary">
