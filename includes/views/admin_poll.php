@@ -85,7 +85,10 @@
                                 <span><?= "Réponses : ". $poll['countReponse']; ?></span>
                             </a>
                             <?php
-                                echo "</br>".$answers[0]['reponse'] ." : ". $answers[0]['countReponse'];
+                            foreach ($answers as $answer){
+                                echo "</br>".$answer['reponse'] ." : ". count($answer);
+                            }
+
                               ?>
                         </strong>
                     </td>

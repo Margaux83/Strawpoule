@@ -19,7 +19,7 @@ function strawpoule_Shortcode($atts)
         $result = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, reponse, type, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id WHERE $question.id=" . $id);
         $polls = json_decode(json_encode($result), true);
 
-        $answer_poll = $wpdb->get_results("SELECT DISTINCT reponse, count(reponse) as countReponse FROM $answer WHERE Sondage_question_id =".$polls[0]['question_id']. " GROUP BY reponse");
+        $answer_poll = $wpdb->get_results("SELECT DISTINCT id, reponse, count(reponse) as countReponse FROM $answer WHERE Sondage_question_id =".$polls[0]['question_id']. " GROUP BY reponse");
         $answers = json_decode(json_encode($answer_poll), true);
 
         /* $count = $wpdb->get_var($sql, 0,0);
@@ -51,7 +51,7 @@ function strawpoule_Shortcode($atts)
                      return $buffer;
                  }else{*/
 
-        if($polls[0]['type']=="0") {
+
 
 
             $output = '
@@ -65,8 +65,8 @@ function strawpoule_Shortcode($atts)
 
                     foreach($answers as $index => $answer){
                         $output .= '<p>
-                       <input type="radio" name="answer" value="' . $index .'" id="option-'.$index.'" />
-                       <label for=\"option-$index\">'.$answer["reponse"].'</label>
+                       <input type="radio" name="answer" value="'.$answer["id"].'" id="option-'.$answer["id"].'" />
+                       <label for=\"option-'.$answer["id"].'\">'.$answer["reponse"].'</label>
                      </p>';
 
                     }
@@ -77,45 +77,7 @@ function strawpoule_Shortcode($atts)
 							</form>
 						';
             return $output;
-        }
-        if($polls[0]['type']=="1"){
 
-            $output = '
-							<form method="post" action="" id="simple-poll-%d" class="simple-poll">
-								<fieldset id="field4">
-									<legend id="titlesondage">' . $polls[0]['titre'] . '</legend>
-									
-									<h2> ' . $polls[0]['question'] . ' </h2>
-								
-								';
-
-            foreach($answers as $index => $answer){
-                $output .= '<p>
-                       <input type="checkbox" name="answer" value="' . $index .'" id="option-'.$index.'" />
-                       <label for=\"option-$index\">'.$answer["reponse"].'</label>
-                     </p>';
-
-            }
-            $output .= ' <input type="submit"id="button-toto" value="Répondre" />
-									</p>
-								</fieldset>
-							
-							</form>
-						';
-            return $output;
-        }
-        /*    $options = preg_split("/\n/",$data->answers);
-
-            $optionList = '';
-            foreach($options as $index => $option){
-                $optionList .="<p>";
-                $optionList .= '<input type="radio" name="answer" value="' . $index .'" id="option-'.$index.'" />';
-                $optionList .= "<label for=\"option-$index\">$option</label>";
-                $optionList .="</p>";
-
-            }*/
-
-        //     return sprintf($output, $data->id, $data->question, $optionList, $rate_button);
         /*}
     }else{
         return "<h3>$data->question</h3><p>$already_rated</p>";
@@ -191,11 +153,11 @@ class Strawpoule_Widget extends WP_Widget{
     {
         extract($args);
         $title = apply_filters('widget_title', $instance['title']);
-        echo $before_widger.$before_title.$title.$after_title.'<form action="" method="post">
+        echo '<form action="" method="post">
                     <label for="email_user">Votre email : </label>
                     <input id="email_user" name="email_user" type="email">
                     <input type="submit">
-                </form>'.$after_widget;
+                </form>';
     }
 
     public function form($instance)

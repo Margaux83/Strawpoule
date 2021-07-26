@@ -15,8 +15,6 @@ add_action('admin_menu', 			array('Strawpoule','init'));
 register_deactivation_hook( __FILE__, array('Strawpoule','uninstall'));
 
 require_once 'includes/strawpoule_functions.php';
-require_once 'includes/class-wpcpolls-cpt.php';
-require_once 'includes/class-wpcpolls-shortcode.php';
 
 class Strawpoule
 {
@@ -42,10 +40,10 @@ class Strawpoule
         $polls = json_decode(json_encode($result), true);
 
         foreach ($polls as $poll){
-            $answer_poll = $wpdb->get_results("SELECT DISTINCT reponse, count(reponse) as countReponse FROM $answer WHERE Sondage_question_id =".$poll['question_id']. " GROUP BY reponse");
+            $answer_poll = $wpdb->get_results("SELECT DISTINCT reponse FROM $answer WHERE Sondage_question_id =".$poll['question_id']. " GROUP BY reponse");
             $answers = json_decode(json_encode($answer_poll), true);
             $shortcode =  strawpoule_Shortcode(['id' => $poll['question_id']]);
-            var_dump($answer_poll);
+            var_dump($answers);
         }
 
 
