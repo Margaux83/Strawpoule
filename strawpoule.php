@@ -29,7 +29,6 @@ class Strawpoule
 
 
     static function admin_poll_function () {
-        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll.php';
 
         global $wpdb;
         $prefix = $wpdb->prefix;
