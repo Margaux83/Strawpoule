@@ -9,7 +9,7 @@
                         <label>Titre du sondage</label>
                     </th>
                     <td>
-                        <input type="text" name="strawpoule_title" value="titre" required/>
+                        <input type="text" name="strawpoule_titre" value="titre" required/>
                     </td>
                 </tr>
                 <th>
@@ -32,7 +32,7 @@
                         <label>#1</label>
                     </th>
                     <td>
-                        <input type="text" name="strawpoule_response_1" value="test" required />
+                        <input type="text" name="strawpoule_reponse_1" value="test" required />
                     </td>
                 </tr>
                 <tr class="form-field form-required">
@@ -40,7 +40,7 @@
                         <label>#2</label>
                     </th>
                     <td>
-                        <input type="text" name="strawpoule_response_2" value="test" required />
+                        <input type="text" name="strawpoule_reponse_2" value="test" required />
                     </td>
                 </tr>
                 <tr class="form-field">
@@ -48,7 +48,7 @@
                         <label>#3</label>
                     </th>
                     <td>
-                        <input type="text" name="strawpoule_response_3" value="test"/>
+                        <input type="text" name="strawpoule_reponse_3" value="test"/>
                         <a href="#">Supprimer</a>
 
                     </td>
