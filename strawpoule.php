@@ -29,7 +29,6 @@ class Strawpoule
 
 
     static function admin_poll_function () {
-
         global $wpdb;
         $prefix = $wpdb->prefix;
         $question = $prefix . self::QUESTION;

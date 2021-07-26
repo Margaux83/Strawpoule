@@ -6,6 +6,12 @@ const RESULT = 'strawpoule_result';
 //[strawpoule att="value"]
 add_shortcode('strawpoule', 'strawpoule_Shortcode');
 
+function getPublicIp() {
+    $externalContent = file_get_contents('http://checkip.dyndns.com/');
+    preg_match('/Current IP Address: \[?([:.0-9a-fA-F]+)\]?/', $externalContent, $m);
+    return $m[1];
+}
+
 function strawpoule_Shortcode($atts)
 {
 
@@ -26,7 +32,7 @@ function strawpoule_Shortcode($atts)
 							<form method="post" action="" id="simple-poll-%d" class="simple-poll">
 								<fieldset id="field4">
 									<legend id="titlesondage">' . $polls[0]['titre'] . '</legend>
-									<p>'.$_SERVER['REMOTE_ADDR'].'</p>
+									<p>'.getPublicIp().'</p>
 									<h2> ' . $polls[0]['question'] . ' </h2>
 									
 								';
