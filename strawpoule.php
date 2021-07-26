@@ -15,8 +15,6 @@ add_action('admin_menu', 			array('Strawpoule','init'));
 register_deactivation_hook( __FILE__, array('Strawpoule','uninstall'));
 
 require_once 'includes/strawpoule_functions.php';
-require_once 'includes/class-wpcpolls-cpt.php';
-require_once 'includes/class-wpcpolls-shortcode.php';
 
 class Strawpoule
 {
@@ -39,11 +37,17 @@ class Strawpoule
         $answer = $prefix . self::ANSWER;
         $result = $prefix . self::RESULT;
 
-        $result = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id");
+        $result = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, reponse, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id GROUP BY question_id");
 
         $polls = json_decode(json_encode($result), true);
-        $answer_poll = $wpdb->get_results("SELECT reponse, count(reponse) as countReponse FROM $answer WHERE Sondage_question_id =".$polls[0]['question_id']. " GROUP BY reponse");
-        $answers = json_decode(json_encode($answer_poll), true);
+
+        foreach ($polls as $poll){
+            $answer_poll = $wpdb->get_results("SELECT DISTINCT reponse FROM $answer WHERE Sondage_question_id =".$poll['question_id']. " GROUP BY reponse");
+            $answers = json_decode(json_encode($answer_poll), true);
+            $shortcode =  strawpoule_Shortcode(['id' => $poll['question_id']]);
+            var_dump($answers);
+        }
+
 
         require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll.php';
     }
@@ -133,6 +137,7 @@ class Strawpoule
           titre VARCHAR(255) NOT NULL,
           question VARCHAR(255) NOT NULL,
           type TINYINT(1) NOT NULL,
+          
           PRIMARY KEY (id)
 		);
 		
@@ -141,6 +146,7 @@ class Strawpoule
           Sondage_question_id int(10) NOT NULL,
           reponse varchar(255) NOT NULL,
           PRIMARY KEY (id),
+          
           FOREIGN KEY (Sondage_question_id) REFERENCES $question(id)
 		);
 
@@ -149,6 +155,7 @@ class Strawpoule
           ip varchar(255) DEFAULT NULL,
           reponse_id int(10) NOT NULL,
           PRIMARY KEY (id),
+          createDate datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	      FOREIGN KEY (reponse_id) REFERENCES $answer(id)
 
 		);
