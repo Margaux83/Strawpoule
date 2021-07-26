@@ -67,13 +67,13 @@ class Strawpoule
         } else {
             // ADD
             $item_question = array(
-                'title' => '',
+                'titre' => '',
                 'question' => ''
             );
             $item_response = array(
-                'response_1' => '',
-                'response_2' => '',
-                'response_3' => ''
+                'reponse_1' => '',
+                'reponse_2' => '',
+                'reponse_3' => ''
             );
         }
 
@@ -82,9 +82,6 @@ class Strawpoule
 
             foreach($item_question as $key => $value) {
                 $post_key = $prefix_key . $key;
-                echo $key.'---<br>';
-
-                echo $post_key.'---<br>';
 
                 if (!isset($_POST[$post_key])) {
                     wp_die(__('Form error.', 'strawpoule'));
@@ -107,8 +104,7 @@ class Strawpoule
             if ($wpdb->replace($question_table, $item_question)) {
                 $lastid = $wpdb->insert_id;
                 foreach($item_response as $response) {
-                    $wpdb->insert($answer_table, array('Sondage_question_id' => $lastid, 'response' => $response));
-                    echo 'a';
+                    $wpdb->insert($answer_table, array('Sondage_question_id' => $lastid, 'reponse' => $response));
                 }
             }
         }
