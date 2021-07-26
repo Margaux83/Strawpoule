@@ -40,12 +40,10 @@ class Strawpoule
         $result = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, reponse, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id GROUP BY question_id");
 
         $polls = json_decode(json_encode($result), true);
-
         foreach ($polls as $poll){
             $answer_poll = $wpdb->get_results("SELECT DISTINCT reponse FROM $answer WHERE Sondage_question_id =".$poll['question_id']. " GROUP BY reponse");
             $answers = json_decode(json_encode($answer_poll), true);
             $shortcode =  strawpoule_Shortcode(['id' => $poll['question_id']]);
-            var_dump($answers);
         }
 
 
@@ -133,7 +131,7 @@ class Strawpoule
           titre VARCHAR(255) NOT NULL,
           question VARCHAR(255) NOT NULL,
           type TINYINT(1) NOT NULL,
-          
+            createDate datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
           PRIMARY KEY (id)
 		);
 		

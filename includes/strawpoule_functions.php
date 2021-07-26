@@ -11,8 +11,7 @@ function strawpoule_Shortcode($atts)
 
 
     $id = $atts['id'];
-    $uid = get_current_user_id();
-    if ($uid != 0) {
+
         global $wpdb;
         $question = $wpdb->prefix . QUESTION;
         $answer = $wpdb->prefix . ANSWER;
@@ -58,7 +57,7 @@ function strawpoule_Shortcode($atts)
 							<form method="post" action="" id="simple-poll-%d" class="simple-poll">
 								<fieldset id="field4">
 									<legend id="titlesondage">' . $polls[0]['titre'] . '</legend>
-									
+									<p>'.$_SERVER['REMOTE_ADDR'].'</p>
 									<h2> ' . $polls[0]['question'] . ' </h2>
 									
 								';
@@ -77,6 +76,8 @@ function strawpoule_Shortcode($atts)
 							</form>
 						';
             return $output;
+
+
 
         /*}
     }else{
@@ -132,7 +133,7 @@ function strawpoule_Shortcode($atts)
 
 
 
-    }
+
 }
 
 
