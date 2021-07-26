@@ -146,9 +146,11 @@ class Strawpoule
           id int(10) NOT NULL AUTO_INCREMENT,
           ip varchar(255) DEFAULT NULL,
           reponse_id int(10) NOT NULL,
+          question_id int(10) NOT NULL,
           PRIMARY KEY (id),
           createDate datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	      FOREIGN KEY (reponse_id) REFERENCES $answer(id)
+	      FOREIGN KEY (reponse_id) REFERENCES $answer(id),
+	      FOREIGN KEY (question_id) REFERENCES $question(id)
 
 		);
 		";
