@@ -31,6 +31,7 @@ class Strawpoule
 
 
     static function admin_poll_function () {
+        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll.php';
 
         global $wpdb;
         $prefix = $wpdb->prefix;
@@ -47,33 +48,73 @@ class Strawpoule
         require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll.php';
     }
 
-   static function admin_new_poll_function () {
+    static function admin_new_poll_function () {
         require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_add.php';
         global $wpdb;
-       $prefix = $wpdb->prefix;
+        $prefix = $wpdb->prefix;
 
-        $question = $prefix . self::QUESTION;
-        $answer = $prefix . self::ANSWER;
-        $result = $prefix . self::RESULT;
-        if(isset($_POST) && count($_POST)>0){
-            $_POST = stripslashes_deep($_POST);
-            $wpdb->show_errors(true);
-            if($_GET['id']=='0'){
+        $question_table = $prefix . self::QUESTION;
+        $answer_table = $prefix . self::ANSWER;
+        $result_table = $prefix . self::RESULT;
 
-                $wpdb->insert($polls, $_POST);
-            }else{
-                $wpdb->update($polls, $_POST, array('id'=> $_GET['id']));
+        if (isset($_GET['strawpoule_id']) && !empty($_GET['strawpoule_id'])) {
+            echo 'EDIT';
+            // EDIT
+        } else {
+            // ADD
+            $item_question = array(
+                'title' => '',
+                'question' => ''
+            );
+            $item_response = array(
+                'response_1' => '',
+                'response_2' => '',
+                'response_3' => ''
+            );
+        }
+
+        if(isset($_POST['submit'])) {
+            $prefix_key = 'strawpoule_';
+
+            foreach($item_question as $key => $value) {
+                $post_key = $prefix_key . $key;
+                echo $key.'---<br>';
+
+                echo $post_key.'---<br>';
+
+                if (!isset($_POST[$post_key])) {
+                    wp_die(__('Form error.', 'strawpoule'));
+                }
+                if (empty($_POST[$post_key])) {
+                    wp_die(__('Form error.', 'strawpoule'));
+                }
+                $item_question[$key] = $_POST[$post_key];
             }
-
-            unset($_GET['id']);
+            foreach($item_response as $key => $value) {
+                $post_key = $prefix_key . $key;
+                if (!isset($_POST[$post_key])) {
+                    wp_die(__('Form error.', 'strawpoule'));
+                }
+                if (empty($_POST[$post_key])) {
+                    wp_die(__('Form error.', 'strawpoule'));
+                }
+                $item_response[$key] = $_POST[$post_key];
+            }
+            if ($wpdb->replace($question_table, $item_question)) {
+                $lastid = $wpdb->insert_id;
+                foreach($item_response as $response) {
+                    $wpdb->insert($answer_table, array('Sondage_question_id' => $lastid, 'response' => $response));
+                    echo 'a';
+                }
+            }
         }
     }
 
-    function admin_edit_poll_function () {
+    static function admin_edit_poll_function () {
         require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_edit.php';
     }
 
-    function admin_stat_poll_function () {
+    static function admin_stat_poll_function () {
         require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_statistic.php';
 
     }
@@ -129,7 +170,6 @@ class Strawpoule
 		$wpdb->query($query);
 		delete_option("uninstall_db");
     }
-
 }
 
 define ("POULE_MAIN_FILE",__FILE__);
