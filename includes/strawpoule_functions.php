@@ -107,7 +107,7 @@ class Strawpoule_Widget extends WP_Widget{
                 )
             )
         );
-        add_action('wp_loaded', array($this,'save_email'));
+        add_action('widgets_init','Strawpoule_Widget');
     }
 
     // Display Widget
@@ -115,15 +115,14 @@ class Strawpoule_Widget extends WP_Widget{
     {
 
 
-        $poll_id = intval($instance['poll_id']);
+        $id = $instance['question.id'];
+
         echo $args['before_widget'];
-        if(!empty($instance['title'])) echo $instance['title'];
-        if(!empty( $poll_id)) :
-            echo do_shortcode("[strawpoul id='".$poll_id."']");
-        else :
-            ?><p>Pas de poll choisi.</p><?php
-        endif;
+        if ( ! empty( $id ) ){
+            echo "<div>[strawpoule id=".['id'=>$id]."]</div>";
+        }
         echo $args['after_widget'];
+    }
 
 //        extract($args);
 //        $title = apply_filters('widget_title', $instance['title']);
@@ -133,41 +132,57 @@ class Strawpoule_Widget extends WP_Widget{
 //                    <input id="email_user" name="email_user" type="email">
 //                    <input type="submit">
 //                </form>';
-    }
+
     public function form($instance)
     {
-        $title = isset($instance['title']) ? $instance['title'] : '';
-        echo '<label for="'.$this->get_field_name('title').'">Titre : </label>
-                <input type="text" id="'.$this->get_field_id('title').'" name="'.$this->get_field_name('title').'" value="'.$title.'"';
+        global $wpdb;
+
+        $id = ( isset( $instance[ 'id' ] ) ) ? $instance[ 'id' ] : 0;
+
+
+        $question = $wpdb->prefix . QUESTION;
+        $answer = $wpdb->prefix . ANSWER;
+        $results = $wpdb->prefix . RESULT;
+        $rows = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, reponse, type, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id WHERE $question.id=" . $id);
+        ?>
+        <p>
+            <label for="<?php echo $this->get_field_id( 'poll' ); ?>"><?php _e( 'Poll:' ); ?></label>
+            <select id = "poll_select" name = "strawpoule_widget_select" class = "widefat">
+                <?php
+                if ( 0 < count( $rows ) ) {
+                    foreach( $rows as $row ) {
+                        ?>
+                        <option value="<?php echo $row->id;?>" <?php selected( $row->id, $question.id ); ?>>
+                            <?php echo $row->question;?>
+                        </option>
+                        <?php
+                    }
+                }
+                ?>
+            </select>
+        </p>
+        <?php
     }
+
 
 
     public function update($new_instance,$old_instance)
     {
-        $instance =  array();
-        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
-        return $instance;
-    }
 
-    public function save_email()
-    {
-        if(isset($_POST['email_user']) && !empty($_POST['email_user'])){
-            global $wpdb;
-            $email = $_POST['email_user'];
-            $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix} toto_table WHERE email='$email'");
-            if(is_null($row)){
-                $wpdb->insert("{$wpdb->prefix}toto_table", array('
-                email'=>$email),'');
-            }
+        $instance = array();
+        $instance['id'] = (!empty($new_instance['id'])) ? strip_tags($new_instance['id']) : $_POST['strawpoule_widget_select'];
+
+        return $instance;
+
         }
-    }
+
 }
 
 /**
  * Creation of the strawpoule's widget
  */
-add_action('widgets_init','strawpoule_Widgets');
+add_action('widgets_init','Strawpoule_Widget');
 
-function strawpoule_Widgets(){
+function Strawpoule_Widget(){
     register_widget('Strawpoule_Widget');
 }
