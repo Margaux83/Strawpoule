@@ -110,17 +110,30 @@ class Strawpoule_Widget extends WP_Widget{
         add_action('wp_loaded', array($this,'save_email'));
     }
 
+    // Display Widget
     public function widget($args,$instance)
     {
-        extract($args);
-        $title = apply_filters('widget_title', $instance['title']);
-        echo '<form action="" method="post">
-                    <label for="email_user">Votre email : </label>
-                    <input id="email_user" name="email_user" type="email">
-                    <input type="submit">
-                </form>';
-    }
 
+
+        $poll_id = intval($instance['poll_id']);
+        echo $args['before_widget'];
+        if(!empty($instance['title'])) echo $instance['title'];
+        if(!empty( $poll_id)) :
+            echo do_shortcode("[strawpoul id='".$poll_id."']");
+        else :
+            ?><p>Pas de poll choisi.</p><?php
+        endif;
+        echo $args['after_widget'];
+
+//        extract($args);
+//        $title = apply_filters('widget_title', $instance['title']);
+//        $poll_id = (int) $instance['poll_id'];
+//        echo '<form action="" method="post">
+//                    <label for="email_user">Votre email : </label>
+//                    <input id="email_user" name="email_user" type="email">
+//                    <input type="submit">
+//                </form>';
+    }
     public function form($instance)
     {
         $title = isset($instance['title']) ? $instance['title'] : '';
