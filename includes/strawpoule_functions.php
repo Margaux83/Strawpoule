@@ -9,21 +9,20 @@ const RESULT = 'strawpoule_result';
  * @return string
  * Recovery of the user's IP address
  */
-function getPublicIp() {
-   /* $externalContent = file_get_contents('http://checkip.dyndns.com/');
-    preg_match('/Current IP Address: \[?([:.0-9a-fA-F]+)\]?/', $externalContent, $m);
+/* $externalContent = file_get_contents('http://checkip.dyndns.com/%27);
+    preg_match('/Current IP Address: [?([:.0-9a-fA-F]+)]?/', $externalContent, $m);
     return "'$m[1]'";*/
-	if(!empty($_SERVER['HTTP_CLIENT_IP'])){
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }else{
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        return $ip;
-        
+function getPublicIp()
+{
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $ip;
 }
-
 /**
  * Creation of the Strawpoule's shortcode
  */
@@ -41,10 +40,10 @@ function strawpoule_Shortcode($atts)
         $question = $wpdb->prefix . QUESTION;
         $answer = $wpdb->prefix . ANSWER;
         $results = $wpdb->prefix . RESULT;
-        $res = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, reponse, type, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id WHERE $question.id=" . $id);
+        $res = $wpdb->get_results("SELECT $question.id as question_id, titre, question,  createDate, reponse, type, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id WHERE $question.id=" . $id);
         $polls = json_decode(json_encode($res), true);
         $ip = '"'.getPublicIp().'"';
-        $answer_poll = $wpdb->get_results("SELECT DISTINCT id, reponse, count(reponse) as countReponse FROM $answer WHERE Sondage_question_id =".$polls[0]['question_id']. " GROUP BY reponse");
+        $answer_poll = $wpdb->get_results("SELECT id, reponse, count(reponse) as countReponse FROM $answer WHERE Sondage_question_id =".$polls[0]['question_id']. " GROUP BY reponse");
         $answers = json_decode(json_encode($answer_poll), true);
 
         $ipExist = "SELECT count(ip) FROM $results WHERE ip=".$ip." AND question_id=".$polls[0]['question_id'];

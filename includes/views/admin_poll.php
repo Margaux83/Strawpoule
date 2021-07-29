@@ -97,6 +97,12 @@
                         <span class="edit"><a href="?page=new-poll&id_poll=<?= $poll["question_id"]; ?>">Editer</a></span> |
                         <span class="delete"><a class="submitdelete" href="">Supprimer</a></span>
                     </strong>
+                    <form method="post">
+                            <span class="delete">
+                                <input type="hidden" name="id_delete_poll" value="<?= $poll["question_id"] ?>">
+                                <button type="submit" class="submitdelete" >Supprimer</button>
+                            </span>
+                    </form>
                 </td>
             </tr>
         <?php } ?>
