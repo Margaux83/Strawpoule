@@ -10,9 +10,18 @@ const RESULT = 'strawpoule_result';
  * Recovery of the user's IP address
  */
 function getPublicIp() {
-    $externalContent = file_get_contents('http://checkip.dyndns.com/');
+   /* $externalContent = file_get_contents('http://checkip.dyndns.com/');
     preg_match('/Current IP Address: \[?([:.0-9a-fA-F]+)\]?/', $externalContent, $m);
-    return "'$m[1]'";
+    return "'$m[1]'";*/
+	if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }else{
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+        
 }
 
 /**
