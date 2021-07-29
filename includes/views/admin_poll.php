@@ -94,7 +94,7 @@
                     </td>
                 <td class="has-row-actions column-primary">
                     <strong>
-                        <span class="edit"><a href="">Editer</a></span> |
+                        <span class="edit"><a href="?page=new-poll&id_poll=<?= $poll["question_id"]; ?>">Editer</a></span> |
                         <span class="delete"><a class="submitdelete" href="">Supprimer</a></span>
                     </strong>
                 </td>

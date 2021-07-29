@@ -49,7 +49,6 @@ class Strawpoule
     }
 
     static function admin_new_poll_function () {
-        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_add.php';
         global $wpdb;
         $prefix = $wpdb->prefix;
 
@@ -57,8 +56,13 @@ class Strawpoule
         $answer_table = $prefix . self::ANSWER;
         $result_table = $prefix . self::RESULT;
 
-        if (isset($_GET['strawpoule_id']) && !empty($_GET['strawpoule_id'])) {
+        if (isset($_GET['id_poll']) && !empty($_GET['id_poll'])) {
             echo 'EDIT';
+            $poll_id = $_GET['id_poll'];
+            $item_question = $wpdb->get_row("SELECT titre, question FROM $question_table WHERE id = $poll_id", ARRAY_A);
+            $item_response = $wpdb->get_results("SELECT * FROM $answer_table WHERE Sondage_question_id = $poll_id", ARRAY_A);
+            $item_question['id'] = $poll_id;
+
             // EDIT
         } else {
             // ADD
@@ -78,7 +82,6 @@ class Strawpoule
 
             foreach($item_question as $key => $value) {
                 $post_key = $prefix_key . $key;
-
                 if (!isset($_POST[$post_key])) {
                     wp_die(__('Form error.', 'strawpoule'));
                 }
@@ -87,15 +90,18 @@ class Strawpoule
                 }
                 $item_question[$key] = $_POST[$post_key];
             }
-            foreach($item_response as $key => $value) {
-                $post_key = $prefix_key . $key;
-                if (!isset($_POST[$post_key])) {
-                    wp_die(__('Form error.', 'strawpoule'));
+            foreach($item_response as $response) {
+                foreach($response as $key => $value) {
+                    $post_key = $prefix_key . $key;
+                    echo $post_key.'<br>';
+                    if (!isset($_POST[$post_key])) {
+                        wp_die(__('Form error.', 'strawpoule'));
+                    }
+                    if (empty($_POST[$post_key])) {
+                        wp_die(__('Form error.', 'strawpoule'));
+                    }
+                    $item_response[$key] = $_POST[$post_key];
                 }
-                if (empty($_POST[$post_key])) {
-                    wp_die(__('Form error.', 'strawpoule'));
-                }
-                $item_response[$key] = $_POST[$post_key];
             }
             if ($wpdb->replace($question_table, $item_question)) {
                 $lastid = $wpdb->insert_id;
@@ -104,6 +110,7 @@ class Strawpoule
                 }
             }
         }
+        require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_add.php';
     }
 
     static function admin_edit_poll_function () {
