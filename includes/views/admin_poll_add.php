@@ -43,7 +43,6 @@
                     </th>
                     <td>
                         <input type="text" name="strawpoule_reponse_3"/>
-                        <a href="#">Supprimer</a>
                     </td>
                 </tr>
                 <?php } else {
