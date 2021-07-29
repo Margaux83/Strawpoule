@@ -105,18 +105,15 @@ class Strawpoule
                 }
                 $item_question[$key] = $_POST[$post_key];
             }
-            foreach($item_response as $response) {
-                foreach($response as $key => $value) {
-                    $post_key = $prefix_key . $key;
-                    echo $post_key.'<br>';
-                    if (!isset($_POST[$post_key])) {
-                        wp_die(__('Form error.', 'strawpoule'));
-                    }
-                    if (empty($_POST[$post_key])) {
-                        wp_die(__('Form error.', 'strawpoule'));
-                    }
-                    $item_response[$key] = $_POST[$post_key];
+            foreach($item_response as $key => $value) {
+                $post_key = $prefix_key . $key;
+                if (!isset($_POST[$post_key])) {
+                    wp_die(__('Form error.', 'strawpoule'));
                 }
+                if (empty($_POST[$post_key])) {
+                    wp_die(__('Form error.', 'strawpoule'));
+                }
+                $item_response[$key] = $_POST[$post_key];
             }
             if ($wpdb->replace($question_table, $item_question)) {
                 $lastid = $wpdb->insert_id;

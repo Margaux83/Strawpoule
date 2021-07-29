@@ -10,14 +10,14 @@
                         <label>Titre du sondage</label>
                     </th>
                     <td>
-                        <input type="text" name="strawpoule_titre" value="<?= (empty($_GET['id_poll'])) ? 'défaut' : $item_question['titre']; ?>" required/>
+                        <input type="text" name="strawpoule_titre" value="<?= (empty($_GET['id_poll'])) ? '' : $item_question['titre']; ?>" required/>
                     </td>
                 </tr>
                 <th>
                     <label>Question</label>
                 </th>
                 <td>
-                    <textarea name="strawpoule_question" style="width: auto" rows="5" cols="53" required><?= (empty($_GET['id_poll'])) ? 'défaut' : $item_question['question']; ?></textarea>
+                    <textarea name="strawpoule_question" style="width: auto" rows="5" cols="53" required><?= (empty($_GET['id_poll'])) ? '' : $item_question['question']; ?></textarea>
                 </td>
                 </tr>
                 <?php if(!$_GET['id_poll']) { ?>

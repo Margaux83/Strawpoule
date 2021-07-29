@@ -40,7 +40,7 @@ function strawpoule_Shortcode($atts)
         $question = $wpdb->prefix . QUESTION;
         $answer = $wpdb->prefix . ANSWER;
         $results = $wpdb->prefix . RESULT;
-        $res = $wpdb->get_results("SELECT $question.id as question_id, titre, question,  createDate, reponse, type, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id WHERE $question.id=" . $id);
+        $res = $wpdb->get_results("SELECT $question.id as question_id, titre, question,  createDate, reponse, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id WHERE $question.id=" . $id);
         $polls = json_decode(json_encode($res), true);
         $ip = '"'.getPublicIp().'"';
         $answer_poll = $wpdb->get_results("SELECT id, reponse, count(reponse) as countReponse FROM $answer WHERE Sondage_question_id =".$polls[0]['question_id']. " GROUP BY reponse");
@@ -121,12 +121,12 @@ class Strawpoule_Widget extends WP_Widget{
     // Display Widget
     public function widget($args,$instance)
     {
-        $id = $instance['id'];
+        $id = (int) $instance['id'];
         global $wpdb;
         $question = $wpdb->prefix . QUESTION;
         $answer = $wpdb->prefix . ANSWER;
         $results = $wpdb->prefix . RESULT;
-        $res = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, reponse, type, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id WHERE $question.id=" . $id);
+        $res = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, reponse, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id WHERE $question.id=" . $id);
         $polls = json_decode(json_encode($res), true);
         $ip = '"'.getPublicIp().'"';
         $answer_poll = $wpdb->get_results("SELECT DISTINCT id, reponse, count(reponse) as countReponse FROM $answer WHERE Sondage_question_id =".$polls[0]['question_id']. " GROUP BY reponse");
@@ -134,25 +134,8 @@ class Strawpoule_Widget extends WP_Widget{
 
         $ipExist = "SELECT count(ip) FROM $results WHERE ip=".$ip." AND question_id=".$polls[0]['question_id'];
         $count = $wpdb->get_var($ipExist, 0,0);
-  /*      global $wpdb;
-        $question = $wpdb->prefix . QUESTION;
-        $answer = $wpdb->prefix . ANSWER;
-        $results = $wpdb->prefix . RESULT;
-        $id = $instance['question.id'];
-        $answer = $wpdb->get_results("select reponse,id from ".$answer."where Sondage_question_id = ".$id);
-        $reponse= $answer['reponse'];
-        $id_answer= $answer['id'];
-        var_dump($answer);
-        $question = $wpdb->get_results("select id,titre,question from ".$question);
-        $titre=$question['titre'];
-        $question=$question['question'];
-        $id_question=$question['id'];
-        var_dump($question);
-        $results = $wpdb->get_results("select  count(reponse_id) from ".$results." where question_id = ".$id) ;
-        $count=$results['reponse_id'];
-        echo $args['before_widget'];*/
+
         echo $args['before_widget'];
-        echo $id = (int) $instance['id'];
 
         if($count=='0') {
             if (isset($_POST)
@@ -171,7 +154,6 @@ class Strawpoule_Widget extends WP_Widget{
                     echo "<p>Votre réponse a bien été prise en compte</p>";
                 }
             } else {
-
                 /**
                  * Creation of the survey's form
                  */
@@ -195,7 +177,7 @@ class Strawpoule_Widget extends WP_Widget{
 							
 							</form>
 						';
-                return $output;
+                echo $output;
             }
         echo $args['after_widget'];
     }
