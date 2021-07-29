@@ -95,8 +95,14 @@
                 <td class="has-row-actions column-primary">
                     <strong>
                         <span class="edit"><a href="">Editer</a></span> |
-                        <span class="delete"><a class="submitdelete" href="">Supprimer</a></span>
+
                     </strong>
+                    <form method="post">
+                            <span class="delete">
+                                <input type="hidden" name="id_delete_poll" value="<?= $poll["question_id"] ?>">
+                                <button type="submit" class="submitdelete" >Supprimer</button>
+                            </span>
+                    </form>
                 </td>
             </tr>
         <?php } ?>

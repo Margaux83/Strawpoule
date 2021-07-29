@@ -33,19 +33,34 @@ class Strawpoule
         $prefix = $wpdb->prefix;
         $question = $prefix . self::QUESTION;
         $answer = $prefix . self::ANSWER;
-        $result = $prefix . self::RESULT;
+        $result_table = $prefix . self::RESULT;
 
-        $result = $wpdb->get_results("SELECT DISTINCT $question.id as question_id, titre, question,  createDate, reponse, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id GROUP BY question_id");
+        $result = $wpdb->get_results("SELECT  $question.id as question_id, titre, question,  createDate, reponse, COUNT(reponse) as countReponse FROM $question INNER JOIN $answer ON $question.id = $answer.Sondage_question_id GROUP BY question_id");
 
         $polls = json_decode(json_encode($result), true);
         foreach ($polls as $poll){
-            $answer_poll = $wpdb->get_results("SELECT DISTINCT reponse FROM $answer WHERE Sondage_question_id =".$poll['question_id']. " GROUP BY reponse");
+            $answer_poll = $wpdb->get_results("SELECT reponse FROM $answer WHERE Sondage_question_id =".$poll['question_id']. " GROUP BY reponse");
             $answers = json_decode(json_encode($answer_poll), true);
             $shortcode =  strawpoule_Shortcode(['id' => $poll['question_id']]);
         }
 
+        /**
+         * delete the poll
+         */
+
+        if($_POST) {
+            if ($_POST['id_delete_poll']) {
+                $wpdb->delete($result_table, ['question_id'=>$_POST['id_delete_poll']]);
+                $wpdb->delete($answer, ['Sondage_question_id'=>$_POST['id_delete_poll']]);
+                $wpdb->delete($question, ['id'=>$_POST['id_delete_poll']]);
+            }
+
+        }
+
 
         require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll.php';
+
+
     }
 
     static function admin_new_poll_function () {
@@ -104,11 +119,14 @@ class Strawpoule
                 }
             }
         }
+
     }
 
     static function admin_edit_poll_function () {
         require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_edit.php';
     }
+
+
 
     static function admin_stat_poll_function () {
         require_once plugin_dir_path(__FILE__) . 'includes/views/admin_poll_statistic.php';
@@ -128,7 +146,6 @@ class Strawpoule
           id INT(10) NOT NULL AUTO_INCREMENT,
           titre VARCHAR(255) NOT NULL,
           question VARCHAR(255) NOT NULL,
-          type TINYINT(1) NOT NULL,
             createDate datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
           PRIMARY KEY (id)
 		);
